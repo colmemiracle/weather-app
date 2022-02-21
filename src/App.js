@@ -14,31 +14,32 @@ class App extends React.Component{
     let today = new Date(),
     time = today.getHours() + ':' + today.getMinutes()
     this.state = {
-      error: null,
-      isLoaded: false,
-      items: [],
-      currentTime: time
+      currentTime: time,
+      isLoading: true,
+      data: []
     }
   }
   getWeather() {
-    fetch("http://api.openweathermap.org/data/2.5/weather?q=london&appid=9ed2cc0d52d0095dc17fc83a4ee6b92e")
-      .then(res => res.json())
+    fetch('http://api.openweathermap.org/data/2.5/weather?q=london&appid=9ed2cc0d52d0095dc17fc83a4ee6b92e')
+      .then(response => { return response.json() })
       .then(result => {
+        setTimeout(() => {
+          this.state({ isLoading: false, data: result })
+        }, 3000)
         console.log(result)
-        }
-      )
+      })
   }
 
   render() {
     return (      
       <Router>
       <div>
-        {/* <button onClick={this.getWeather}>press</button> */}
-
+        <button onClick={this.getWeather}>press</button>
+        
         <Link to="/"></Link>
         <Routes>
           <Route exact path="/" element={<HomePage/>} />
-          <Route exact path="/search" element={<SearchTown weatherMethod = {this.result}/>} />
+          <Route exact path="/search" element={<SearchTown weatherMethod = {this.getWeather}/>} />
           <Route exact path="/dashboard" element={<WeatherBoard/>} />
         </Routes>
       </div>
